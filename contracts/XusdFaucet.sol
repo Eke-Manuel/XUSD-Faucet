@@ -31,8 +31,7 @@ contract XusdFaucet is Ownable, ReentrancyGuard {
         requireAmountAndTime(_to);
         addressCache[_to].totalAmountReceived += 10;
         addressCache[_to].lastWithdrawTime += block.timestamp;
-        XUSD.transferFrom(
-            address(this),
+        XUSD.transfer(
             _to,
             10e18
         );
@@ -60,6 +59,10 @@ contract XusdFaucet is Ownable, ReentrancyGuard {
         } else {
             revert("Max withdrawal reached");
         }
+
+    }
+
+    receive() external payable {
 
     }
 }

@@ -1,4 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -8,10 +9,9 @@ module.exports = {
     },
     Mumbai: {
       url: process.env.MUMBAI_URL,
-      accounts: {
-        mnemonic: [ process.env.MNEMONIC ]
-      }
+      accounts : [ process.env.MNEMONIC ]
     }
+    
   },
   solidity: {
     version: "0.8.10",
@@ -22,9 +22,10 @@ module.exports = {
       }
     },
   },
+
   etherscan: {
     apiKey: process.env.API_KEY,
- },
+  },
   mocha: {
     timeout: 40000
   }
