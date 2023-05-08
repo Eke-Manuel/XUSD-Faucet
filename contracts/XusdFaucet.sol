@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.9;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
@@ -8,7 +8,6 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuar
 contract XusdFaucet is Ownable, ReentrancyGuard {
 
     IERC20 public XUSD;
-    IERC20 public Matic;
     bool public open;
 
     struct Cache {
@@ -18,15 +17,12 @@ contract XusdFaucet is Ownable, ReentrancyGuard {
 
     mapping(address => Cache) public addressCache;
 
-    constructor(address _xusd, address _matic) {
-        require(_xusd != address(0), "invalid address");
-        require(_matic != address(0), "invalid address");
-        XUSD = IERC20(_xusd);
-        Matic = IERC20(_matic);
+    constructor() {
+        XUSD = IERC20(0xA3C957f5119eF3304c69dBB61d878798B3F239D9);
         openFaucet();
     }
 
-    function getTestTokens(address payable _to) external nonReentrant {
+    function getTestTokens(address payable _to) external nonReentrant onlyOwner {
         require(open, "faucet is closed");
         requireAmountAndTime(_to);
         addressCache[_to].totalAmountReceived += 10;
@@ -36,11 +32,7 @@ contract XusdFaucet is Ownable, ReentrancyGuard {
             10e18
         );
         if (addressCache[msg.sender].totalAmountReceived == 0) {
-            Matic.transferFrom(
-                address(this),
-                _to,
-                5e5
-            );
+             _to.transfer(5e17);
         }
     }
 
